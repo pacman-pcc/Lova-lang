@@ -1,0 +1,36 @@
+// LOVA INSTALLER SCRIPT
+
+proc repo = "None"
+proc install_dir = "{HOME}/.local/bin"
+proc binary_name = "lova"
+proc download_url = "0"
+proc os_type = "$(uname -s | tr -d '\r\n')"
+
+proc green = "\033[0;32m"
+proc red = "\033[0;31m"
+proc reset = "\033[0m"
+
+cd ~
+
+printn "{green}Installing LOVA..{reset}"
+
+// install lova
+mkdir -p {install.dir}
+
+printn "{green}Download binary..{reset}"
+curl -fsSL {download_url} -o "{install_dir}/{binary_name}"
+
+printn "{os_type}"
+
+if os_type != "Linux" and os_type != "Darwin" {
+    printn "{red}Your OS is not suitable for the language{reset}"
+} else {
+    printn "{green}Good{reset}"
+}
+
+chmod +x "{install_dir}/{binary_name}"
+
+
+printn "Lova installed in {install_dir}/{binary_name}"
+
+printn ""

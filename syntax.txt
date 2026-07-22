@@ -1,0 +1,98 @@
+#!/bin/bash - Automatical
+set -u (и еще кучу всего) - Automatical
+
+printn "Hello, Orez!" -> echo "Hello, Orez"
+print "Hello!" -> echo -n "Hello!"
+
+proc name = "Alexey" -> name="Alexey"
+
+print "{name}" -> echo $name
+print "My {name}" -> echo "My ${age}"
+
+const PI = 3.14 -> readonly PI=3.14
+
+comment = //
+
+del name -> unset name
+
+аргументы
+$0 = base
+$1, $2, $3 = base
+$# - .lenargs()
+$@ - .args()
+$? - $?
+$$ - $$
+
+массивы
+fruits = ["Apple", "Banan"]
+
+printn "{fruits[0]}"
+printn "{fruits[?]}"
+printn "{fruits.len()}"
+
+арифметика
+
+дробные числа и т.д встроены сразу
+
+if/else
+
+proc a = 10
+
+if a > 5 {
+    printn "A bigger"
+}
+elseif a == 5 {
+    printn "A equal 5"
+}
+
+else {
+    echo "a min 5"
+}
+
+циклы
+
+for item in apple banana orange {
+    echo "Fruit: {item}"
+}
+
+диапазаны и C стайл также похожи
+
+while a < 2 {
+
+}
+
+until -> fdo
+
+fdo count == 0 {
+
+}
+
+case
+
+proc action = "Start"
+
+case action do {
+    "start":
+        printn "start.."
+        over
+    "stop" | "pause":
+        printn "stoping..."
+        over
+    _:
+        printn "Error!"
+        over
+}
+
+функции
+
+function greet() {
+    procloc name = $1 // analog local
+    echo "Hello, {name}"
+    return 0
+}
+
+greet "Ivan"
+
+перенаправление такие же
+
+&&, || как в пайтоне тоесть and и or
