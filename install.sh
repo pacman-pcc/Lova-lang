@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 
 
-repo="None"
+repo="https://github.com/pacman-pcc/Lova-lang"
 install_dir="${HOME}/.local/bin"
 binary_name="lova"
 download_url="0"
