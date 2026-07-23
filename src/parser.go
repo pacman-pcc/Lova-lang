@@ -126,7 +126,6 @@ func ParseLine(item Token) Token {
 
 	rawLine := strings.TrimSpace(line)
 
-	// ПРИОРИТЕТ 1: Ветки case (например "init":, "build" | "compile": или _:)
 	if strings.HasSuffix(rawLine, ":") && !strings.HasPrefix(rawLine, "proc") && !strings.HasPrefix(rawLine, "procloc") {
 		label := strings.TrimSuffix(rawLine, ":")
 		label = strings.TrimSpace(label)
@@ -137,7 +136,6 @@ func ParseLine(item Token) Token {
 		return Token{Type: "RAW", Value: label + ")"}
 	}
 
-	// ПРИОРИТЕТ 2: Математика (например counter = counter + 1)
 	if strings.Contains(rawLine, "=") && (strings.Contains(rawLine, "+") || strings.Contains(rawLine, "-") || strings.Contains(rawLine, "*") || strings.Contains(rawLine, "/")) &&
 		!strings.HasPrefix(rawLine, "proc ") && !strings.HasPrefix(rawLine, "procloc ") && !strings.HasPrefix(rawLine, "const ") {
 		parts := strings.SplitN(rawLine, "=", 2)
@@ -256,11 +254,17 @@ func ParseLine(item Token) Token {
 	}
 
 	if strings.HasPrefix(lineClean, "function ") && strings.HasSuffix(lineClean, "{") {
-		fnHeader := strings.TrimSpace(lineClean[9 : len(lineClean)-1])
-		if !strings.HasSuffix(fnHeader, "()") {
-			fnHeader = fnHeader + " ()"
-		}
-		return Token{Type: "FN_START", Value: fnHeader + " {"}
+    // Берём всё между "function " и завершающей "{"
+    	header := strings.TrimSpace(lineClean[9 : len(lineClean)-1])
+
+    // Если есть скобки (например matrix_text(text) или matrix_text()),
+    // отрезаем всё, начиная с первой скобки '('
+    	if idx := strings.Index(header, "("); idx != -1 {
+        	header = strings.TrimSpace(header[:idx])
+     	}
+
+    // Формируем валидный Bash-заголовок
+    	return Token{Type: "FN_START", Value: header + " () {"}
 	}
 
 	if strings.HasPrefix(lineClean, "return ") {
