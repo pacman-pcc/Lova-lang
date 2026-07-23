@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 func translateFile(ozPath string) string {
@@ -17,6 +18,7 @@ func translateFile(ozPath string) string {
 	shPath := ozPath[:len(ozPath)-5] + ".sh"
 
 	fmt.Printf("Translate: %s :: %s..\n", ozPath, shPath)
+	start_time := time.Now()
 
 	code, err := os.ReadFile(ozPath)
 	if err != nil {
@@ -40,6 +42,8 @@ func translateFile(ozPath string) string {
 	}
 
 	fmt.Println("LOVA: Ready ::")
+	over_time := time.Since(start_time)
+	fmt.Printf("LOVA: Time compile: %v\n", over_time)
 	return shPath
 }
 

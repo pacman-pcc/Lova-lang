@@ -55,6 +55,11 @@ func parseStringInter(text string) string {
 }
 
 func parseCondition(cond string) string {
+	cond = strings.TrimSpace(cond)
+	if cond == "" {
+		return ""
+	}
+
 	prefixes := []struct {
 		prefix string
 		flag   string
@@ -115,11 +120,33 @@ func parseCondition(cond string) string {
 func ParseLine(item Token) Token {
 	kind, line := item.Type, item.Value
 
-	if kind == "EMPTY" || kind == "RAW_CMD" {
-		return Token{Type: kind, Value: parseStringInter(line)}
+	if kind == "EMPTY" {
+		return Token{Type: "EMPTY", Value: ""}
 	}
 
 	rawLine := strings.TrimSpace(line)
+
+	// ПРИОРИТЕТ 1: Ветки case (например "init":, "build" | "compile": или _:)
+	if strings.HasSuffix(rawLine, ":") && !strings.HasPrefix(rawLine, "proc") && !strings.HasPrefix(rawLine, "procloc") {
+		label := strings.TrimSuffix(rawLine, ":")
+		label = strings.TrimSpace(label)
+		label = parseStringInter(label)
+		if label == "_" {
+			return Token{Type: "RAW", Value: "*)"}
+		}
+		return Token{Type: "RAW", Value: label + ")"}
+	}
+
+	// ПРИОРИТЕТ 2: Математика (например counter = counter + 1)
+	if strings.Contains(rawLine, "=") && (strings.Contains(rawLine, "+") || strings.Contains(rawLine, "-") || strings.Contains(rawLine, "*") || strings.Contains(rawLine, "/")) &&
+		!strings.HasPrefix(rawLine, "proc ") && !strings.HasPrefix(rawLine, "procloc ") && !strings.HasPrefix(rawLine, "const ") {
+		parts := strings.SplitN(rawLine, "=", 2)
+		varName := strings.TrimSpace(parts[0])
+		expr := strings.TrimSpace(parts[1])
+		varName = strings.ReplaceAll(varName, ".", "_")
+		expr = parseStringInter(expr)
+		return Token{Type: "MATH", Value: varName + "=$((" + expr + "))"}
+	}
 
 	if strings.HasPrefix(rawLine, "proc ") {
 		content := parseStringInter(strings.TrimSpace(rawLine[5:]))
@@ -175,7 +202,7 @@ func ParseLine(item Token) Token {
 			cmd = "PRINTN"
 			fmtStr = "%b\\n"
 		}
-		return Token{Type: cmd, Value: "printf \"" + fmtStr + "\" \"" + val + "\"\n"}
+		return Token{Type: cmd, Value: "printf \"" + fmtStr + "\" \"" + val + "\""}
 	}
 
 	lineClean := parseStringInter(rawLine)
@@ -185,12 +212,19 @@ func ParseLine(item Token) Token {
 		return Token{Type: "IF", Value: parseCondition(cond)}
 	}
 
-	if strings.HasPrefix(lineClean, "elseif ") && strings.HasSuffix(lineClean, "{") {
-		cond := strings.TrimSpace(lineClean[7 : len(lineClean)-1])
+	checkLine := lineClean
+	if strings.HasPrefix(checkLine, "}") {
+		checkLine = strings.TrimSpace(checkLine[1:])
+	}
+
+	if (strings.HasPrefix(checkLine, "elseif ") || strings.HasPrefix(checkLine, "else if ")) && strings.HasSuffix(checkLine, "{") {
+		idx := strings.Index(checkLine, "if ")
+		cond := strings.TrimSpace(checkLine[idx+3 : len(checkLine)-1])
+
 		return Token{Type: "ELIF", Value: parseCondition(cond)}
 	}
 
-	if lineClean == "} else {" || lineClean == "else {" {
+	if checkLine == "else {" {
 		return Token{Type: "ELSE", Value: ""}
 	}
 
@@ -215,8 +249,8 @@ func ParseLine(item Token) Token {
 		return Token{Type: "CASE_START", Value: varStr}
 	}
 
-	if strings.HasPrefix(lineClean, "defer ") {
-		innerCmd := strings.TrimSpace(lineClean[6:])
+	if strings.HasPrefix(rawLine, "defer ") {
+		innerCmd := strings.TrimSpace(rawLine[6:])
 		innerToken := ParseLine(Token{Type: "SPECIAL", Value: innerCmd})
 		return Token{Type: "DEFER", Value: innerToken.Value}
 	}

@@ -20,18 +20,7 @@ func Tokenize(line string) []Token {
 		line = strings.TrimSpace(line[:idx])
 	}
 
-	words := strings.Fields(line)
-	if len(words) == 0 {
-		return []Token{{"EMPTY", ""}}
-	}
-
-	firstWord := words[0]
-
-	if Keywords[firstWord] || firstWord == "}" || firstWord == "fdo" {
-		return []Token{{"SPECIAL", line}}
-	}
-
-	return []Token{{"RAW_CMD", line}}
+	return []Token{{"SPECIAL", line}}
 }
 
 func Lex(code string) []Token {

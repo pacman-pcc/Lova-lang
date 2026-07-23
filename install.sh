@@ -3,44 +3,68 @@ set -euo pipefail
 IFS=$'\n\t'
 
 
+trap 'rm -rf $${TMP_DIR}' EXIT
 
-repo="https://github.com/pacman-pcc/Lova-lang"
-install_dir="${HOME}/.local/bin"
-binary_name="lova"
-download_url="0"
-os_type="$(uname -s | tr -d '\r\n')"
+REPO="pacman-pcc/Lova-lang"
+TAG="release"
+BIN_NAME="lova"
+INSTALL_DIR="/usr/local/bin"
+URL="https://github.com/${REPO}/releases/download/${TAG}/${BIN_NAME}"
 
-green="\033[0;32m"
-red="\033[0;31m"
-reset="\033[0m"
+GREEN="\033[0;32m"
+CYAN="\033[0;36m"
+RED="\033[0;31m"
+NC="\033[0m"
 
-cd ~
-
-printf "%b\n" "${green}Installing LOVA..${reset}"
-
-
-
-mkdir -p ${install_dir}
-
-printf "%b\n" "${green}Download binary..${reset}"
-
-curl -fsSL ${download_url} -o "${install_dir}/${binary_name}"
-
-printf "%b\n" "${os_type}"
+printf "%b\n" "${CYAN}==> Installing LOVA Transpiler...${NC}"
 
 
-if [[ "$os_type" != "Linux" && "$os_type" != "Darwin" ]]; then
-printf "%b\n" "${red}Your OS is not suitable for the language${reset}"
+if [[ -e "/usr/bin/curl" ]]; then
+printf "%b\n" "${GREEN}[✓] Found curl${NC}"
 
 else
-printf "%b\n" "${green}Good${reset}"
+printf "%b\n" "${RED}[X] Error: curl is not installed.${NC}"
 
+exit 1
 fi
 
-chmod +x "${install_dir}/${binary_name}"
+TMP_DIR="/tmp/lova_install"
+mkdir -p ${TMP_DIR}
+
+TARGET="/tmp/lova_install/lova"
+
+printf "%b\n" "${CYAN}[->] Downloading binary from GitHub...${NC}"
 
 
-printf "%b\n" "Lova installed in ${install_dir}/${binary_name}"
+curl -sSL ${URL} -o ${TARGET}
 
 
-printf "%b\n" ""
+if [[ -f "/tmp/lova_install/lova" ]]; then
+printf "%b\n" "${GREEN}[✓] Download complete.${NC}"
+
+else
+printf "%b\n" "${RED}[X] Error: Download failed.${NC}"
+
+exit 1
+fi
+
+printf "%b\n" "${CYAN}[->] Installing to ${INSTALL_DIR}...${NC}"
+
+chmod +x ${TARGET}
+
+sudo mv ${TARGET} ${INSTALL_DIR}/${BIN_NAME}
+
+if [[ -f "/usr/local/bin/lova" ]]; then
+printf "%b\n" "${GREEN}=========================================${NC}"
+
+printf "%b\n" "${GREEN}[✓] LOVA installed successfully!${NC}"
+
+printf "%b\n" "${GREEN}[✓] Run 'lova' or 'lova run script.lova'${NC}"
+
+printf "%b\n" "${GREEN}=========================================${NC}"
+
+else
+printf "%b\n" "${RED}[X] Installation failed.${NC}"
+
+exit 1
+fi

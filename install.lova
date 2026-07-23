@@ -1,36 +1,52 @@
-// LOVA INSTALLER SCRIPT
+proc REPO = "pacman-pcc/Lova-lang"
+proc TAG = "release"
+proc BIN_NAME = "lova"
+proc INSTALL_DIR = "/usr/local/bin"
+proc URL = "https://github.com/{REPO}/releases/download/{TAG}/{BIN_NAME}"
 
-proc repo = "None"
-proc install_dir = "{HOME}/.local/bin"
-proc binary_name = "lova"
-proc download_url = "0"
-proc os_type = "$(uname -s | tr -d '\r\n')"
+proc GREEN = "\033[0;32m"
+proc CYAN = "\033[0;36m"
+proc RED = "\033[0;31m"
+proc NC = "\033[0m"
 
-proc green = "\033[0;32m"
-proc red = "\033[0;31m"
-proc reset = "\033[0m"
+printn "{CYAN}==> Installing LOVA Transpiler...{NC}"
 
-cd ~
-
-printn "{green}Installing LOVA..{reset}"
-
-// install lova
-mkdir -p {install.dir}
-
-printn "{green}Download binary..{reset}"
-curl -fsSL {download_url} -o "{install_dir}/{binary_name}"
-
-printn "{os_type}"
-
-if os_type != "Linux" and os_type != "Darwin" {
-    printn "{red}Your OS is not suitable for the language{reset}"
+if is_exist /usr/bin/curl {
+    printn "{GREEN}[✓] Found curl{NC}"
 } else {
-    printn "{green}Good{reset}"
+    printn "{RED}[X] Error: curl is not installed.{NC}"
+    exit 1
 }
 
-chmod +x "{install_dir}/{binary_name}"
+proc TMP_DIR = "/tmp/lova_install"
+mkdir -p {TMP_DIR}
+defer rm -rf {TMP_DIR}
 
+proc TARGET = "/tmp/lova_install/lova"
 
-printn "Lova installed in {install_dir}/{binary_name}"
+printn "{CYAN}[->] Downloading binary from GitHub...{NC}"
 
-printn ""
+curl -sSL {URL} -o {TARGET}
+
+// Передаем путь без фигурных скобок, чтобы избежать $$
+if is_file /tmp/lova_install/lova {
+    printn "{GREEN}[✓] Download complete.{NC}"
+} else {
+    printn "{RED}[X] Error: Download failed.{NC}"
+    exit 1
+}
+
+printn "{CYAN}[->] Installing to {INSTALL_DIR}...{NC}"
+chmod +x {TARGET}
+
+sudo mv {TARGET} {INSTALL_DIR}/{BIN_NAME}
+
+if is_file /usr/local/bin/lova {
+    printn "{GREEN}========================================={NC}"
+    printn "{GREEN}[✓] LOVA installed successfully!{NC}"
+    printn "{GREEN}[✓] Run 'lova' or 'lova run script.lova'{NC}"
+    printn "{GREEN}========================================={NC}"
+} else {
+    printn "{RED}[X] Installation failed.{NC}"
+    exit 1
+}

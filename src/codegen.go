@@ -18,11 +18,17 @@ func GenBash(parsedItems []Token) string {
 
 		case "IF":
 			cond := processCond(val)
+			if strings.TrimSpace(cond) == "" {
+				cond = "true"
+			}
 			out = append(out, "if [[ "+cond+" ]]; then")
 			blockStack = append(blockStack, "if")
 
 		case "ELIF":
 			cond := processCond(val)
+			if strings.TrimSpace(cond) == "" {
+				cond = "true"
+			}
 			out = append(out, "elif [[ "+cond+" ]]; then")
 
 		case "ELSE":
@@ -33,14 +39,18 @@ func GenBash(parsedItems []Token) string {
 			blockStack = append(blockStack, "loop")
 
 		case "UNTIL":
-			out = append(out, "until [[ "+val+" ]]; then")
+			out = append(out, "until [[ "+val+" ]]; do")
 			blockStack = append(blockStack, "loop")
 
 		case "DEFER":
 			deferStack = append([]string{val}, deferStack...)
 
 		case "CASE_START":
-			out = append(out, "case \"$"+val+"\" in")
+			if strings.HasPrefix(val, "\"$") {
+				out = append(out, "case "+val+" in")
+			} else {
+				out = append(out, "case \"$"+val+"\" in")
+			}
 			blockStack = append(blockStack, "case")
 
 		case "CASE_OVER":
@@ -48,6 +58,7 @@ func GenBash(parsedItems []Token) string {
 
 		case "FN_START":
 			out = append(out, val)
+			blockStack = append(blockStack, "fn")
 
 		case "RETURN":
 			out = append(out, "   "+val)
@@ -68,6 +79,8 @@ func GenBash(parsedItems []Token) string {
 				out = append(out, "done")
 			case "case":
 				out = append(out, "esac")
+			case "fn":
+				out = append(out, "}")
 			}
 		}
 	}
