@@ -1,6 +1,5 @@
-<p align="center">
-  <img src="logo.png" />
-</p>
+![Lova](logo.png)
+![Lova-2](logo22.png)
 
 ![Go Version](https://img.shields.io/badge/Go-1.24+-7A49A5?style=flat-square&logo=go&logoColor=white)
 ![Latest Version](https://img.shields.io/badge/version-beta-7A49A5?style=flat-square)
