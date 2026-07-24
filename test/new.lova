@@ -1,0 +1,11 @@
+proc hypers = "Lova!"
+proc two_hypers = "NN!"
+proc you = "Boy!"
+
+function tur(){
+    printn "\t{hypers}"
+    printn "\t{two_hypers}"
+    printn "\t{you}"
+}
+
+tur
