@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const Version = "0.3-beta"
+
 func translateFile(ozPath string) string {
 	if !strings.HasSuffix(ozPath, ".lova") {
 		fmt.Printf("LOVA: File %s not found extension .lova\n", ozPath)
@@ -51,7 +53,12 @@ func main() {
 	if len(os.Args) > 1 {
 		target := os.Args[1]
 
-		if target == "run" {
+		if target == "ver" || target == "version" || target == "-v" || target == "--version" {
+			fmt.Printf("LOVA Compiler v%s\n", Version)
+			return
+		}
+
+		if target == "run" || target == "-r" {
 			target = "main.lova"
 			if len(os.Args) > 2 {
 				target = os.Args[2]
@@ -75,6 +82,7 @@ func main() {
 		} else {
 			fmt.Printf("LOVA: %s not found.\n", target)
 		}
+
 
 	} else {
 		ozFiles, err := filepath.Glob("*.lova")

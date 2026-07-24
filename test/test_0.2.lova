@@ -56,7 +56,7 @@ function run_loop_stress() {
     printn "{COLOR_CYAN}[LOOP] Testing while loop mechanics...{COLOR_NC}"
 
     proc counter = 0
-    while counter > 5 {
+    while counter < 5 {
         printn "{COLOR_BLUE}--> Iteration step: {counter}{COLOR_NC}"
 
         if counter > 2 {

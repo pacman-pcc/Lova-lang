@@ -61,7 +61,7 @@ run_loop_stress() {
 printf "%b\n" "${COLOR_CYAN}[LOOP] Testing while loop mechanics...${COLOR_NC}"
 
 counter=0
-while [[ "$counter" > 5 ]]; do
+while [[ "$counter" < 5 ]]; do
 printf "%b\n" "${COLOR_BLUE}--> Iteration step: ${counter}${COLOR_NC}"
 
 if [[ "$counter" > 2 ]]; then
