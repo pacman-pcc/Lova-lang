@@ -1,0 +1,38 @@
+proc angle = 0
+
+while true {
+    print "\033[H\033[J"
+
+    case angle do {
+        "0":
+            printn "  ┌───────┐"
+            printn "  │       │"
+            printn "  │       │"
+            printn "  └───────┘"
+            over
+        "90":
+            printn "   /-----\\"
+            printn "  /       \\"
+            printn "  \\       /"
+            printn "   \\-----/"
+            over
+        "180":
+            printn "  ┌───────┐"
+            printn "  │       │"
+            printn "  │       │"
+            printn "  └───────┘"
+            over
+        _:
+            printn "   \\-----/"
+            printn "  /       \\"
+            printn "  \\       /"
+            printn "   \\-----/"
+            over
+    }
+
+    sleep 1
+    angle = angle + 90
+    if angle == 360 {
+        angle=0
+    }
+}

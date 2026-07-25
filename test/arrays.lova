@@ -1,13 +1,18 @@
 // 1. Declare the array
-arr [my_array] = ["Apple", "Banana", "Orange"]
+arr [my_array] = ["Apple" "Banana" "Orange"]
 
 // 2. Print all array elements (using [!] which parses to [@])
 printn "All elements: [my_array][!]"
 
 // 3. Append new elements
-[my_array].append("Pear", "Kiwi")
+[my_array].append("Pear" "Kiwi")
 printn "After append: [my_array][!]"
 
 // 4. Delete element at index 1
 [my_array].delete(1)
 printn "After deleting index 1: [my_array][!]"
+
+// 5. ranges for in
+for el in [my_array] {
+    printn "Fruits: $el"
+}

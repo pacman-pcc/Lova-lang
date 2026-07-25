@@ -34,7 +34,6 @@ printf "%b\n" "${CYAN}[->] Downloading binary from GitHub...${NC}"
 
 curl -sSL ${URL} -o ${TARGET}
 
-
 if [[ -f "/tmp/lova_install/lova" ]]; then
 printf "%b\n" "${GREEN}[✓] Download complete.${NC}"
 else

@@ -25,7 +25,7 @@ COLOR_MAGENTA="\033[0;35m"
 COLOR_CYAN="\033[0;36m"
 COLOR_NC="\033[0m"
 
-setup_environment() {
+setup_environment () {
 printf "%b\n" "${COLOR_CYAN}[INIT] Setting up bench environment v${GLOBAL_VERSION}...${COLOR_NC}"
 
 mkdir -p ${TEMP_DIR}
@@ -39,7 +39,7 @@ if [[ -d "/tmp" ]]; then
 printf "%b\n" "${COLOR_GREEN}[✓] System /tmp is available.${COLOR_NC}"
 else
 printf "%b\n" "${COLOR_RED}[X] Critical: /tmp is missing!${COLOR_NC}"
-   return 1
+    return 1
 fi
 
 if [[ -e "/usr/bin/curl" ]]; then
@@ -57,7 +57,7 @@ printf "%b\n" "${COLOR_RED}[X] How are you running Linux without /etc/passwd?!${
 fi
 }
 
-run_loop_stress() {
+run_loop_stress () {
 printf "%b\n" "${COLOR_CYAN}[LOOP] Testing while loop mechanics...${COLOR_NC}"
 
 counter=0
@@ -70,6 +70,7 @@ else
 printf "%b\n" "${COLOR_YELLOW}    Just starting...${COLOR_NC}"
 fi
 
+counter=$((counter + 1))
 done
 
 flag=true
@@ -78,7 +79,7 @@ printf "%b\n" "${COLOR_MAGENTA}[FDO] Flag loop check passed.${COLOR_NC}"
 done
 }
 
-test_case_matching() {
+test_case_matching () {
 printf "%b\n" "${COLOR_CYAN}[CASE] Testing pattern matching...${COLOR_NC}"
 
 status_code="deploy"
@@ -115,7 +116,7 @@ printf "%b\n" "Unsupported OS"
 esac
 }
 
-memory_cleanup_test() {
+memory_cleanup_test () {
 printf "%b\n" "${COLOR_CYAN}[MEM] Testing variable deletion...${COLOR_NC}"
 
 temp_payload_1="Data payload alpha"

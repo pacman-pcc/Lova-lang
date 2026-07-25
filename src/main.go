@@ -63,6 +63,13 @@ func main() {
 			return
 		}
 
+		if target == "help" || target == "-h" {
+			fmt.Println("-r/run => Running program in Lova-lang.")
+			fmt.Println("-v/ver/version => Check version Lova.")
+			fmt.Println("lova <file.lova> => Compile Lova not run.")
+			fmt.Println("lova => Compile all file *.lova in dir.")
+		}
+
 		if target == "run" || target == "-r" {
 			target = "main.lova"
 			if len(os.Args) > 2 {
@@ -79,13 +86,13 @@ func main() {
 					_ = cmd.Run()
 				}
 			} else {
-				fmt.Printf("%sLOVA: %s not found.%s\n", RED, target, NC)
+				fmt.Printf("%sLOVA: %s not found. or help menu%s\n", RED, target, NC)
 			}
 
 		} else if fileExists(target) {
 			translateFile(target)
 		} else {
-			fmt.Printf("%sLOVA: %s not found.%s\n", RED, target, NC)
+			fmt.Printf("%sLOVA: %s not found. or help menu%s\n", RED, target, NC)
 		}
 
 	} else {

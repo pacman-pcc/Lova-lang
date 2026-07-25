@@ -1,11 +1,14 @@
-![Lova](logo.png)
-![Lova-2](logo22.png)
+<p align="center">
+  <img src="logo22.png" alt="Lova-2">
+</p>
 
-![Go Version](https://img.shields.io/badge/Go-1.24+-7A49A5?style=flat-square&logo=go&logoColor=white)
-![Latest Version](https://img.shields.io/badge/version-beta-7A49A5?style=flat-square)
-![License](https://img.shields.io/badge/license-GPL-5A2E85?style=flat-square)
-![Platform](https://img.shields.io/badge/OS-macOS%20%2F%20Linux-7A49A5?style=flat-square&logo=linux&logoColor=white)
-![GitHub Release](https://img.shields.io/github/v/release/pacman-pcc/Lova-lang?color=7A49A5&style=flat-square)
+<p align="center">
+  <img src="https://img.shields.io/badge/Go-1.24+-7A49A5?style=flat-square&logo=go&logoColor=white" alt="Go Version">
+  <img src="https://img.shields.io/badge/version-beta-7A49A5?style=flat-square" alt="Latest Version">
+  <img src="https://img.shields.io/badge/license-GPL-5A2E85?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/OS-macOS%20%2F%20Linux-7A49A5?style=flat-square&logo=linux&logoColor=white" alt="Platform">
+  <img src="https://img.shields.io/github/v/release/pacman-pcc/Lova-lang?color=7A49A5&style=flat-square" alt="GitHub Release">
+</p>
 
 **Lova** - A Programming Language Built for Bash Coding Without Pain
 
@@ -108,14 +111,14 @@ printf "%b\n" "After deleting index 1: ${my_array[@]}"
 ```
 
 # Speed in 10 line
-`[nn@endeavour test]$ lova -r new.lova
+```$ lova -r new.lova
 Translate: new.lova :: new.sh..
 LOVA: Ready ::
 LOVA: Time compile: 1.440137ms
 	Lova!
 	NN!
 	Boy!
-`
+```
 
 # Why create lova?
 >Lova was created as a lighter replacement for Bash as Bash has terrible syntax and outdated design
