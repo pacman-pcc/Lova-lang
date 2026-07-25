@@ -28,7 +28,6 @@ printn "{CYAN}[->] Downloading binary from GitHub...{NC}"
 
 curl -sSL {URL} -o {TARGET}
 
-// Передаем путь без фигурных скобок, чтобы избежать $$
 if is_file /tmp/lova_install/lova {
     printn "{GREEN}[✓] Download complete.{NC}"
 } else {
