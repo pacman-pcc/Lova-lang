@@ -6,7 +6,7 @@ IFS=$'\n\t'
 trap 'rm -rf ${TMP_DIR}' EXIT
 
 REPO="pacman-pcc/Lova-lang"
-TAG="v.03"
+TAG="v.05"
 BIN_NAME="lova"
 INSTALL_DIR="/usr/local/bin"
 URL="https://github.com/${REPO}/releases/download/${TAG}/${BIN_NAME}"

@@ -17,3 +17,13 @@ is_dir
 is_exist
 function
 return
+arr
+append
+delete
+[]
+{}
+:
++
+-
+*
+/

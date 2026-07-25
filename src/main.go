@@ -9,22 +9,28 @@ import (
 	"time"
 )
 
-const Version = "0.3-beta"
+const Version = "0.5-beta"
+
+const GREEN = "\033[0;32m"
+const CYAN = "\033[0;36m"
+const RED = "\033[0;31m"
+const PURPLE = "\033[0;35m"
+const NC = "\033[0m"
 
 func translateFile(ozPath string) string {
 	if !strings.HasSuffix(ozPath, ".lova") {
-		fmt.Printf("LOVA: File %s not found extension .lova\n", ozPath)
+		fmt.Printf("%sLOVA: File %s not found extension .lova%s\n", RED, ozPath, NC)
 		return ""
 	}
 
 	shPath := ozPath[:len(ozPath)-5] + ".sh"
 
-	fmt.Printf("Translate: %s :: %s..\n", ozPath, shPath)
+	fmt.Printf("%sLOVA:%s Translate: %s :: %s..\n", PURPLE, NC, ozPath, shPath)
 	start_time := time.Now()
 
 	code, err := os.ReadFile(ozPath)
 	if err != nil {
-		fmt.Printf("LOVA: Error build :: %v\n", err)
+		fmt.Printf("%sLOVA: Error build :: %v%s\n", RED, err, NC)
 		return ""
 	}
 
@@ -39,13 +45,12 @@ func translateFile(ozPath string) string {
 
 	err = os.WriteFile(shPath, []byte(bashCode), 0775)
 	if err != nil {
-		fmt.Printf("LOVA: Error build :: %v\n", err)
+		fmt.Printf("%sLOVA: Error build :: %v%s\n", RED, err, NC)
 		return ""
 	}
 
-	fmt.Println("LOVA: Ready ::")
 	over_time := time.Since(start_time)
-	fmt.Printf("LOVA: Time compile: %v\n", over_time)
+	fmt.Printf("%sLOVA: Time compile: %v%s\n", CYAN, over_time, NC)
 	return shPath
 }
 
@@ -74,20 +79,19 @@ func main() {
 					_ = cmd.Run()
 				}
 			} else {
-				fmt.Printf("LOVA: %s not found.\n", target)
+				fmt.Printf("%sLOVA: %s not found.%s\n", RED, target, NC)
 			}
 
 		} else if fileExists(target) {
 			translateFile(target)
 		} else {
-			fmt.Printf("LOVA: %s not found.\n", target)
+			fmt.Printf("%sLOVA: %s not found.%s\n", RED, target, NC)
 		}
-
 
 	} else {
 		ozFiles, err := filepath.Glob("*.lova")
 		if err != nil || len(ozFiles) == 0 {
-			fmt.Println("LOVA: *.lova files not found in directory")
+			fmt.Printf("%sLOVA: *.lova files not found in directory%s\n", RED, NC)
 			return
 		}
 

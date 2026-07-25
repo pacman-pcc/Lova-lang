@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// GenBash compiles the sequence of parsed Tokens into a valid, executable Bash script string.
 func GenBash(parsedItems []Token) string {
 	out := []string{BashHeaders}
 	var blockStack []string
@@ -13,7 +14,7 @@ func GenBash(parsedItems []Token) string {
 		kind, val := item.Type, item.Value
 
 		switch kind {
-		case "RAW_CMD", "EMPTY", "ASSIGN", "LOCAL_ASSIGN", "CONST", "DEL", "PRINTN", "PRINT", "RAW":
+		case "RAW_CMD", "EMPTY", "ASSIGN", "LOCAL_ASSIGN", "CONST", "DEL", "PRINTN", "PRINT", "RAW", "MATH":
 			out = append(out, val)
 
 		case "IF":
@@ -42,6 +43,11 @@ func GenBash(parsedItems []Token) string {
 			out = append(out, "until [[ "+val+" ]]; do")
 			blockStack = append(blockStack, "loop")
 
+		// Handle for loop block headers
+		case "FOR":
+			out = append(out, "for "+val+"; do")
+			blockStack = append(blockStack, "loop")
+
 		case "DEFER":
 			deferStack = append([]string{val}, deferStack...)
 
@@ -61,7 +67,7 @@ func GenBash(parsedItems []Token) string {
 			blockStack = append(blockStack, "fn")
 
 		case "RETURN":
-			out = append(out, "   "+val)
+			out = append(out, "    "+val)
 
 		case "BLOCK_END":
 			if len(blockStack) == 0 {
@@ -85,6 +91,7 @@ func GenBash(parsedItems []Token) string {
 		}
 	}
 
+	// Prepend deferred tasks as an EXIT trap if any were registered
 	if len(deferStack) > 0 {
 		deferString := strings.Join(deferStack, "; ")
 		trapCmd := "\ntrap '" + deferString + "' EXIT\n"
@@ -95,6 +102,7 @@ func GenBash(parsedItems []Token) string {
 	return strings.Join(out, "\n")
 }
 
+// processCond normalizes condition expressions and replaces logical words with Bash operators.
 func processCond(val string) string {
 	val = strings.TrimSpace(val)
 	val = strings.ReplaceAll(val, " and ", " && ")

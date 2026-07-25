@@ -5,6 +5,7 @@
 ![Latest Version](https://img.shields.io/badge/version-beta-7A49A5?style=flat-square)
 ![License](https://img.shields.io/badge/license-GPL-5A2E85?style=flat-square)
 ![Platform](https://img.shields.io/badge/OS-macOS%20%2F%20Linux-7A49A5?style=flat-square&logo=linux&logoColor=white)
+![GitHub Release](https://img.shields.io/github/v/release/pacman-pcc/Lova-lang?color=7A49A5&style=flat-square)
 
 **Lova** - A Programming Language Built for Bash Coding Without Pain
 
@@ -68,6 +69,53 @@ printf "%b\n" "\t${you}"
 tur
 ```
 
+## Lova
+```bash
+// 1. Declare the array
+arr [my_array] = ["Apple", "Banana", "Orange"]
+
+// 2. Print all array elements (using [!] which parses to [@])
+printn "All elements: [my_array][!]"
+
+// 3. Append new elements
+[my_array].append("Pear", "Kiwi")
+printn "After append: [my_array][!]"
+
+// 4. Delete element at index 1
+[my_array].delete(1)
+printn "After deleting index 1: [my_array][!]"
+```
+
+## Bash
+```bash
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+
+my_array=("Apple", "Banana", "Orange")
+
+
+printf "%b\n" "All elements: ${my_array[@]}"
+
+
+my_array+=("Pear", "Kiwi")
+printf "%b\n" "After append: ${my_array[@]}"
+
+
+unset 'my_array[1]'
+printf "%b\n" "After deleting index 1: ${my_array[@]}"
+```
+
+# Speed in 10 line
+`[nn@endeavour test]$ lova -r new.lova
+Translate: new.lova :: new.sh..
+LOVA: Ready ::
+LOVA: Time compile: 1.440137ms
+	Lova!
+	NN!
+	Boy!
+`
 
 # Why create lova?
 >Lova was created as a lighter replacement for Bash as Bash has terrible syntax and outdated design
