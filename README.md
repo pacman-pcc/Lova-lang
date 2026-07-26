@@ -75,13 +75,13 @@ tur
 ## Lova
 ```bash
 // 1. Declare the array
-arr [my_array] = ["Apple", "Banana", "Orange"]
+arr [my_array] = ["Apple" "Banana" "Orange"]
 
 // 2. Print all array elements (using [!] which parses to [@])
 printn "All elements: [my_array][!]"
 
 // 3. Append new elements
-[my_array].append("Pear", "Kiwi")
+[my_array].append("Pear" "Kiwi")
 printn "After append: [my_array][!]"
 
 // 4. Delete element at index 1
@@ -96,13 +96,13 @@ set -euo pipefail
 IFS=$'\n\t'
 
 
-my_array=("Apple", "Banana", "Orange")
+my_array=("Apple" "Banana" "Orange")
 
 
 printf "%b\n" "All elements: ${my_array[@]}"
 
 
-my_array+=("Pear", "Kiwi")
+my_array+=("Pear" "Kiwi")
 printf "%b\n" "After append: ${my_array[@]}"
 
 
@@ -125,3 +125,8 @@ LOVA: Time compile: 1.440137ms
 
 # Documentation
 -> [Guide / Documentation](guide/documentation.md)
+
+# Installing
+```bash
+bash <(curl -sSL https://raw.githubusercontent.com/pacman-pcc/Lova-lang/main/install.sh)
+```

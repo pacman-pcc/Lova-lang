@@ -1,0 +1,37 @@
+// LOVA Script: Safe Universal Package Manager Cache Cleanup (APT, DNF, Pacman)
+
+proc COLOR_RED = "\033[0;31m"
+proc COLOR_MAGENTA = "\033[0;35m"
+proc COLOR_NC = "\033[0m"
+
+printn "{COLOR_MAGENTA}[+]{COLOR_NC} Starting universal package cache cleanup..."
+
+// 1. APT Cache Cleanup (Debian / Ubuntu / Mint)
+if is_exist "/usr/bin/apt-get" {
+    printn "{COLOR_MAGENTA}[*]{COLOR_NC} Cleaning APT cache..."
+    // Clean obsolete packages and partial downloads safely
+    apt-get clean
+    apt-get autoclean
+}
+
+// 2. DNF Cache Cleanup (Fedora / RHEL / Rocky Linux)
+if is_exist "/usr/bin/dnf" {
+    printn "{COLOR_MAGENTA}[*]{COLOR_NC} Cleaning DNF cache..."
+    // Clean expired and old cached metadata/packages
+    dnf clean expire-cache
+    dnf clean packages
+}
+
+// 3. Pacman Cache Cleanup (Arch Linux / Manjaro / EndeavourOS)
+if is_exist "/usr/bin/paccache" {
+    printn "{COLOR_MAGENTA}[*]{COLOR_NC} Cleaning Pacman cache via paccache..."
+    // Keep the 2 most recent versions and clear completely uninstalled packages
+    paccache -rk 2
+    paccache -ruk 0
+} else if is_exist "/usr/bin/pacman" {
+    printn "{COLOR_RED}[*] Cleaning Pacman cache via standard pacman...{COLOR_NC}"
+    // Safely remove cached versions of uninstalled packages
+    pacman -Sc --noconfirm
+}
+
+printn "{COLOR_MAGENTA}[✓]{COLOR_NC} All available package caches cleaned successfully!"
