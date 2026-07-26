@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const Version = "0.5-beta"
+const Version = "1.0-stable"
 
 const GREEN = "\033[0;32m"
 const CYAN = "\033[0;36m"
