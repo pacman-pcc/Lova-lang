@@ -1,0 +1,86 @@
+proc angle = 0
+
+while true {
+    print "\033[H\033[J"
+
+    case angle do {
+        "0":
+            printn "        _..._"
+            printn "      .'     '."
+            printn "     /    .    \\"
+            printn "    |    (O)    |"
+            printn "     \\    '    /"
+            printn "      '.     .'"
+            printn "        '---'"
+            over
+        "45":
+            printn "        _..._"
+            printn "      .'     '."
+            printn "     /   .     \\"
+            printn "    |   (O)     |"
+            printn "     \\         /"
+            printn "      '.     .'"
+            printn "        '---'"
+            over
+        "90":
+            printn "        _..._"
+            printn "      .'     '."
+            printn "     /         \\"
+            printn "    |  (O)      |"
+            printn "     \\         /"
+            printn "      '.     .'"
+            printn "        '---'"
+            over
+        "135":
+            printn "        _..._"
+            printn "      .'     '."
+            printn "     /         \\"
+            printn "    | (O)       |"
+            printn "     \\         /"
+            printn "      '.     .'"
+            printn "        '---'"
+            over
+        "180":
+            printn "        _..._"
+            printn "      .'     '."
+            printn "     /         \\"
+            printn "    |     ~     |"
+            printn "     \\         /"
+            printn "      '.     .'"
+            printn "        '---'"
+            over
+        "225":
+            printn "        _..._"
+            printn "      .'     '."
+            printn "     /         \\"
+            printn "    |       (O) |"
+            printn "     \\         /"
+            printn "      '.     .'"
+            printn "        '---'"
+            over
+        "270":
+            printn "        _..._"
+            printn "      .'     '."
+            printn "     /         \\"
+            printn "    |      (O)  |"
+            printn "     \\         /"
+            printn "      '.     .'"
+            printn "        '---'"
+            over
+        _:
+            printn "        _..._"
+            printn "      .'     '."
+            printn "     /     .   \\"
+            printn "    |     (O)   |"
+            printn "     \\    '    /"
+            printn "      '.     .'"
+            printn "        '---'"
+            over
+    }
+
+    sleep 0.3
+    angle = angle + 45
+    if angle == 360 {
+        angle=0
+    }
+}

@@ -1,160 +1,266 @@
-# LOVA Language Specification & Reference Manual
+# Lova 
+Lova - Why is it needed? What kind of language? How does it work? I will explain
 
-Welcome to the official language reference for **LOVA**—a modern, ultra-lightweight scripting language and **transpiler** designed to target POSIX Bash.
+## 1. Transpile work
+What is transpilation? Transpilation is when you take your code and translate it into another, is this language considered just a shell? no.. many languages work this way, for example, TypeScript, Nim, Vlang and even the initial C++
 
-LOVA bridges the gap between raw shell speed and modern programming ergonomic standards. It introduces block scoping, memory cleanup mechanics, strict runtime safety, and intuitive file predicates, transpiling directly into clean, standalone Bash scripts.
+Here's how it works
 
+```Lova-code --- Lovac (lovatranspiler) --- *.sh```
 
-## 🎯 Language Philosophy
+Are there any disadvantages in transpilation, maybe the interpretation is better? Not at all, transpiling to Bash gives you the ability to insert, also gives you full sync since Bash is almost everywhere
 
-Writing complex shell scripts in standard Bash often leads to bug-prone, hard-to-read code. Unset variables silently pass, pipe failures go unnoticed, and file testing requires cryptic flags (`-f`, `-d`, `-e`).
+## 2. Ready
 
-LOVA solves these issues by adhering to four core principles:
-* **Zero-Config Safety**: All transpiled scripts run under strict execution safety (`set -euo pipefail` and `IFS=$'\n\t'`).
-* **Minimal Core**: A tiny keyword footprint (19 keywords total) ensuring extreme simplicity and low cognitive load.
-* **Modern Syntax**: Clean string interpolation, explicit scope definitions (`proc` vs `procloc`), and block-level syntax (`{ ... }`).
-* **Deterministic Cleanup**: Native Go-style `defer` statement transpiled to reliable POSIX traps.
+Well, now that we have understood the principle of the transpiler, we can start learning, the first one is downloaded by the command in the README 
+lova then type `lova -v` to check the version'
 
----
+`lova` => Compiles all *.lova into *.sh that is in the folder
 
-## ⚡ Transpilation & Execution Model
+`lova -v` => shows the version
 
-The LOVA toolchain operates as a source-to-source transpiler (`lova` CLI binary). It reads `.lova` source files, parses tokens, applies safety wrappers, and generates standard `.sh` output.
+`lova -r <file.lova` => transpils the specific file and runs it immediately 
 
-```bash
-[ Source Code: app.lova ]  --->  ( LOVA Transpiler / lova )  --->  [ Output: app.sh ]
-                                                                        |
-                                                                ( Executed via Bash )
-```
+`lova <file.lova>` => just compiles
 
-### CLI Usage
+## 3. Syntax
 
-```bash
-# Transpile all .lova files in the current workspace to .sh
-lova
-
-# Transpile and execute a specific .lova file immediately
-lova run script.lova
-```
-
----
-
-## 🔑 Keywords & Grammar Reference
-
-LOVA reserves **19 keywords**. Variables, function names, and custom identifiers must not collide with these names:
-
-| Keyword | Category | Description |
-| :--- | :--- | :--- |
-| `function` | Declaration | Defines a procedure block |
-| `return` | Control Flow | Returns an exit code from a function |
-| `defer` | Cleanup | Registers a deferred action upon script exit |
-| `proc` | Variable | Declares a global or script-scoped variable |
-| `procloc` | Variable | Declares a local variable inside a function scope |
-| `const` | Variable | Declares a read-only variable |
-| `del` | Variable | Unsets/deletes a variable from memory |
-| `printn` | I/O | Prints text to standard output with a newline |
-| `print` | I/O | Prints text to standard output without a newline |
-| `if` | Control Flow | Conditional evaluation branch |
-| `elseif` | Control Flow | Secondary conditional evaluation branch |
-| `else` | Control Flow | Fallback evaluation branch |
-| `while` | Control Flow | Loop condition evaluation |
-| `fdo` | Control Flow | Loop execution block indicator |
-| `case` | Control Flow | Pattern matching construct |
-| `over` | Control Flow | Pattern matching block terminator |
-| `is_file` | Predicate | Evaluates if path exists and is a regular file |
-| `is_dir` | Predicate | Evaluates if path exists and is a directory |
-| `is_exist` | Predicate | Evaluates if path or file exists |
-
----
-
-## Variables
+### Procedure (variables)
+Well, variables or procedures (call it what you want) The keyword in the variables is 'proc', followed by the name and through = assignment, you do not need to specify types since the language is dynamic
 
 ```bash
-// proc [name] = [count]
+// example
 proc age = 22
+age = age + 2 // 24
+age = age - 2 // 20
+age = age * 2 // 44
+age = age / 2 // 11
 ```
 
-## Constant
+### I/O
+Here we have the I/O
+
+`printn "text"` => print and newline (\n)
+
+`print "text"` => only print
+
+`{}` in `printn/print` put a variable inside
 
 ```bash
-const name = "Tom"
+proc age = 19
+
+printn "Age: {age}" // Age: 19
 ```
 
-## if/elseif/else
+To accept command-line arguments, there is $1 for the first argument, $2 for the second argument
 
 ```bash
-if age > 22 {
-    printn "Big"
-} else if {
-    printn "22"
+proc input = $1
+```
+
+BUT what the... unbound variables? and SVS? This is protection built into security, but in order not to leave it alone, you can use, for example, this
+
+```bash
+proc inputable = ${1:-} // ${1:-default}
+```
+
+### IF/ELSEIF/ELSE
+The most interesting thing is that we do not hesitate 
+
+if - if the condition is equal to.. 
+
+elseif - if the condition is equal to another 
+
+else - if the condition is neither if nor elseif
+
+```bash
+proc Name = "Tom"
+
+if Name == "NN" {
+    printn "Hello, sir!"
+} else if Name == "Lola" {
+    printn "Hello, sis!"
 } else {
-    printn "Small"
+    printn "Permission denied!"
 }
 ```
 
-## defer
+
+### Function
+
+Functions are a convenient way to use the same thing without writing a bunch of code
 
 ```bash
-pwd
-defer ls -la
-```
-
-
-## Loop
-
-```bash
-proc a = 0
-while a > 2 {
-    ls -la
-    a = a + 1
-}```
-
-```bash
-proc is_happy = false
-fdo is_happy {
-    print "Lalala"
-}```
-
-## Delete variable
-
-```bash
-proc a = 2
-del a
-```
-
-## Function
-
-```bash
-function calc(){
-    proc a = 2
-    proc b = 2
-
-    printn "{a} + {b}"
-    // return command )))
+function hello(){
+    printn "Hello, Lova!"
 }
+
+hello // if args to => hello arg arg2
 ```
 
-## case
-```bash
-proc action = "Start"
+and procloc
 
-case action do {
+procloc = this is a local variable inside the function
+
+```bash
+function hello(){
+    procloc name = "Lova!"
+    printn "Hello, {name}"
+}
+
+hello // if args to => hello arg arg2
+```
+
+```
+$ lova -r func.lova
+LOVA: Translate: func.lova :: func.sh..
+LOVA: Time compile: 1.096391ms
+Hello, Lova!
+```
+
+but if
+
+```bash
+name="Lola!"
+```
+
+```
+$ lova -r func.lova
+LOVA: Translate: func.lova :: func.sh..
+LOVA: Time compile: 451.588µs
+Hello, Lova!
+```
+
+Nothing change
+
+### Cases
+
+Case - Consider a more convenient if/else 
+
+`_` => analog else
+
+```bash
+proc init = "start"
+
+case init do {
     "start":
-        printn "start.."
+        printn "Deploy start!"
         over
-    "stop" | "pause":
-        printn "stoping..."
+    "stop":
+        printn "Deploy stop!"
         over
     _:
-        printn "Error!"
-        over
+        printn "Error deploy!"
+        over // analog break
+}
+```
+### Defer
+defer is something that must be executed at the end of the code, for example
+
+```bash
+// example defer
+printn "Hello"
+defer printn "World!"
+```
+
+```
+$ lova -r defer.lova
+LOVA: Translate: defer.lova :: defer.sh..
+LOVA: Time compile: 215.54µs
+Hello
+World!
+```
+
+### Loop
+
+1: While
+
+While is basic loop in LOVA
+
+```bash
+// while
+
+while true {
+    print "\033[H\033[J"
+
+    case frame do {
+        "0":
+            printn " /\\_/\\"
+            printn "( o.o )"
+            printn " > ^ < "
+            over
+        _:
+            printn " /\\_/\\"
+            printn "( -.- )"
+            printn " > ^ < "
+            over
+    }
+
+    sleep 1
+    if frame == 0 {
+        frame=1
+    } else {
+        frame=0
+    }
 }
 ```
 
-## simplecase
+while is one arguments
 
-`
-is_dir -> -d in bash
-is_file -> -f in bash
-is_exist
-`
+2: fdo
+
+fdo loop = works as long as the conditions are false
+
+```bash
+// fdo
+
+proc flag = true
+fdo flag {
+    printn "{COLOR_MAGENTA}[FDO] Flag loop check passed.{COLOR_NC}"
+}
+```
+
+3: for in + arrays
+
+for in = Used to iterate over arrays
+
+```bash
+// for in
+// 1. Declare the array
+arr [my_array] = ["Apple" "Banana" "Orange"]
+
+// 2. Print all array elements (using [!] which parses to [@])
+printn "All elements: [my_array][!]"
+
+// 3. Append new elements
+[my_array].append("Pear" "Kiwi")
+printn "After append: [my_array][!]"
+
+// 4. Delete element at index 1
+[my_array].delete(1)
+printn "After deleting index 1: [my_array][!]"
+
+// 5. ranges for in
+for el in [my_array] {
+    printn "Fruits: $el"
+}
+```
+
+### shortcut
+
+is_file (-f), is_dir (-d), is_exist (-e)
+
+
+# FAQ
+
+- Why I Need LOVA Is Bash
+
+`Yes, there is, but LOVA gives you more security with a convenient syntax, although knowing Bash doesn't hurt`
+
+- What if I don't understand something?
+
+`Go to discord I can often answer`
+
+- What is SVS?
+
+`This system works with the set -u flag, it prohibits making empty variables, it also prohibits making empty arguments $1, $2, an example of how to bypass if you need to declare a variable is already there`

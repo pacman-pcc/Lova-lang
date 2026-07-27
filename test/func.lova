@@ -1,0 +1,8 @@
+function hello(){
+    procloc name = "Lova!"
+    printn "Hello, {name}"
+}
+
+// name="Lola"
+
+hello // if args to => hello arg arg2

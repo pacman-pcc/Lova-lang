@@ -1,5 +1,5 @@
 proc REPO = "pacman-pcc/Lova-lang"
-proc TAG = "v.05"
+proc TAG = "v.1.0"
 proc BIN_NAME = "lova"
 proc INSTALL_DIR = "/usr/local/bin"
 proc URL = "https://github.com/{REPO}/releases/download/{TAG}/{BIN_NAME}"
