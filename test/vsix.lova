@@ -1,0 +1,38 @@
+proc REPO = "pacman-pcc/Lova-Snippets"
+proc BIN_NAME = "main/lova-1.0.0.vsix"
+proc URL = "https://raw.githubusercontent.com/{REPO}/{BIN_NAME}"
+
+proc GREEN = "\033[0;32m"
+proc CYAN = "\033[0;36m"
+proc RED = "\033[0;31m"
+proc NC = "\033[0m"
+
+printn "{CYAN}==>{NC} Installing LOVA VSIX..."
+
+if is_exist /usr/bin/curl {
+    printn "{GREEN}[+]{NC} Found curl"
+} else {
+    printn "{RED}[X]{NC} Error: curl is not installed."
+    exit 1
+}
+
+printn "{CYAN}==>{NC} Downloading VSIX from GitHub..."
+
+curl -sSL {URL} -o $HOME/lova-1.0.0.vsix
+
+if is_file $HOME/lova-1.0.0.vsix {
+    printn "{GREEN}[+]{NC} Download complete."
+} else {
+    printn "{RED}[X]{NC} Error: Download failed."
+    exit 1
+}
+
+printn "{CYAN}==>{NC} Installing VSIX to Visual Studio Code..."
+
+if is_exist /usr/bin/code {
+    exec code --install-extension $HOME/lova-1.0.0.vsix
+    printn "{GREEN}\t==>{NC} LOVA VSIX installed successfully!"
+} else {
+    printn "{RED}[X]{NC} Error: VS Code CLI ('code') is not found."
+    exit 1
+}
