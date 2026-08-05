@@ -1,0 +1,36 @@
+// ==========================================
+// Along
+// ==========================================
+
+function print_neofetch() {
+    // system information
+    procloc user_host = $(whoami)@$(cat /etc/hostname)
+    procloc os_name   = $(grep '^PRETTY_NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
+    procloc kernel    = $(uname -r)
+    procloc uptime_val = $(uptime -p)
+    procloc shell_ver = $(basename "$SHELL")
+    procloc cpu_model = $(grep -m 1 'model name' /proc/cpuinfo | cut -d':' -f2 | sed 's/^[ \t]*//')
+
+    // ASCII
+    printn "       /\       {user_host}"
+    printn "      /  \\      ----------------------------------"
+    printn "     / /\\ \\     OS: {os_name}"
+    printn "    / ____ \\    Kernel: {kernel}"
+    printn "   /_/    \\_\\   Uptime: {uptime_val}"
+    printn "                Shell: {shell_ver}"
+    printn "                CPU: {cpu_model}"
+}
+
+// Run
+printn "Launching Along..."
+printn ""
+
+// Check POSIX system
+if is_file "/etc/os-release" {
+    print_neofetch
+} else {
+    printn "[ERROR] Not a standard Linux system!"
+}
+
+// defer
+defer printn "Along exited cleanly."

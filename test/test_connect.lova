@@ -1,0 +1,6 @@
+import "colors"
+import "os"
+
+if {IS_LINUX} == "true" {
+    printn "{GREEN}Running on Linux!{NC}"
+}

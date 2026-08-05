@@ -1,0 +1,3 @@
+// example defer
+printn "Hello"
+defer printn "World!"

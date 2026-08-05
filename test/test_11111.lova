@@ -1,0 +1,9 @@
+proc Name = "Tom"
+
+if Name == "NN" {
+    printn "Hello, sir!"
+} else if Name == "Lola" {
+    printn "Hello, sis!"
+} else {
+    printn "Permission denied!"
+}

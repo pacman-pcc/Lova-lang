@@ -1,0 +1,5 @@
+import "colors"
+
+printn "{RED}Hello,{NC}{GREEN} World!{NC}"
+printn "{PURPLE}This is a test of the colors library.{NC}"
+printn "{BLUE}Good{NC}{YELLOW} day!{NC}"

@@ -1,0 +1,64 @@
+// ==========================================
+//          LOVA MATRIX DIGITAL RAIN
+// ==========================================
+
+function clear_screen() {
+    print "\033[2J\033[1;1H"
+}
+
+function hide_cursor() {
+    print "\033[?25l"
+}
+
+function show_cursor() {
+    print "\033[?25h"
+}
+
+function matrix_text() {
+    procloc text = "${1:-}" // safety variables
+    printn ""
+    print "\033[1;32m> "
+    print "{text}"
+    printn "\033[0m"
+}
+
+// Ctrl+C = exit matrix or \r
+defer show_cursor
+
+hide_cursor
+clear_screen
+
+printn "\033[1;32m"
+printn "01000110 01010010 01000101 01000101"
+printn "10011001 01001111 01010110 01000001"
+printn "\033[0m"
+
+sleep 1
+
+matrix_text "Wake up, Neo..."
+sleep 2
+
+matrix_text "The Matrix has you..."
+sleep 2
+
+matrix_text "Follow the white rabbit."
+sleep 2
+
+clear_screen
+
+proc running = 1
+
+// Looping
+while running == 1 {
+    proc c1 = "ｦ ｱ ｳ ｴ ｵ ｶ ｷ ｹ ｺ ｻ ｼ ｽ ｾ ｿ"
+    proc c2 = "1 0 1 X Z 9 8 7 A F 0 1 1 0"
+    proc c3 = "ﾀ ﾂ テ ﾅ ﾆ ﾇ ﾈ ﾊ ﾋ ﾎ ﾏ ﾐ ﾑ ﾒ"
+    proc c4 = "0 1 0 1 0 1 1 0 0 1 1 0 0 1"
+    proc c5 = "ﾓ ﾔ ﾕ ﾖ ﾗ ﾘ ﾙ ﾚ ﾛ ﾜ ヰ ヱ ヲ"
+
+    printn "\033[0;32m{c1} \033[1;32m{c3} \033[0;32m{c5}\033[0m"
+    printn "\033[1;32m{c2} \033[0;32m{c4} \033[1;32m{c1}\033[0m"
+    printn "\033[0;32m{c5} \033[1;32m{c2} \033[0;32m{c3}\033[0m"
+
+    sleep 0.05
+}

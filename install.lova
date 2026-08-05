@@ -1,0 +1,51 @@
+proc REPO = "pacman-pcc/Lova-lang"
+proc TAG = "v1.2"
+proc BIN_NAME = "lova"
+proc INSTALL_DIR = "/usr/local/bin"
+proc URL = "https://github.com/{REPO}/releases/download/{TAG}/{BIN_NAME}"
+
+proc GREEN = "\033[0;32m"
+proc CYAN = "\033[0;36m"
+proc RED = "\033[0;31m"
+proc NC = "\033[0m"
+
+printn "{CYAN}==> Installing LOVA Transpiler...{NC}"
+
+if is_exist /usr/bin/curl {
+    printn "{GREEN}[✓] Found curl{NC}"
+} else {
+    printn "{RED}[X] Error: curl is not installed.{NC}"
+    exit 1
+}
+
+proc TMP_DIR = "/tmp/lova_install"
+mkdir -p {TMP_DIR}
+defer rm -rf {TMP_DIR}
+
+proc TARGET = "/tmp/lova_install/lova"
+
+printn "{CYAN}[->] Downloading binary from GitHub...{NC}"
+
+curl -sSL {URL} -o {TARGET}
+
+if is_file /tmp/lova_install/lova {
+    printn "{GREEN}[✓] Download complete.{NC}"
+} else {
+    printn "{RED}[X] Error: Download failed.{NC}"
+    exit 1
+}
+
+printn "{CYAN}[->] Installing to {INSTALL_DIR}...{NC}"
+chmod +x {TARGET}
+
+sudo mv {TARGET} {INSTALL_DIR}/{BIN_NAME}
+
+if is_file /usr/local/bin/lova {
+    printn "{GREEN}========================================={NC}"
+    printn "{GREEN}[✓] LOVA installed successfully!{NC}"
+    printn "{GREEN}[✓] Run 'lova' or 'lova run script.lova'{NC}"
+    printn "{GREEN}========================================={NC}"
+} else {
+    printn "{RED}[X] Installation failed.{NC}"
+    exit 1
+}

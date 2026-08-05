@@ -1,0 +1,25 @@
+proc frame = 0
+
+while true {
+    print "\033[H\033[J"
+
+    case frame do {
+        "0":
+            printn " /\\_/\\"
+            printn "( o.o )"
+            printn " > ^ < "
+            over
+        _:
+            printn " /\\_/\\"
+            printn "( -.- )"
+            printn " > ^ < "
+            over
+    }
+
+    sleep 1
+    if frame == 0 {
+        frame=1
+    } else {
+        frame=0
+    }
+}
