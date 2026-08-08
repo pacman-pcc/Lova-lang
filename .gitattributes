@@ -1,2 +1,2 @@
-*.lova linguist-language=Shell
+*.lova linguist-language=C++
 *.lova linguist-detectable=true
